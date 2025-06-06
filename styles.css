@@ -1,18 +1,34 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+:root {
+    --primary-color: #ff4d4d;
+    --secondary-color: #4d9fff;
+    --background-color: #1a1a1a;
+    --text-color: #ffffff;
+    --border-color: #333333;
+    --hover-color: #666666;
+    --card-background: #2d2d2d;
+    --input-background: #333333;
+    --success-color: #28a745;
+    --error-color: #dc3545;
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', 'Arial', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
     line-height: 1.6;
-    background-color: #f0f8ff;
-    color: #333;
 }
 
 .container {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
 }
@@ -20,112 +36,923 @@ body {
 header {
     text-align: center;
     margin-bottom: 40px;
+    position: relative;
     padding: 20px;
-    background-color: #1e90ff;
-    color: white;
+    background-color: var(--card-background);
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+h1 {
+    color: var(--primary-color);
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.team-logo {
+    font-size: 4em;
+    margin: 20px 0;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
 }
 
 .leaderboard {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 40px;
+    background-color: var(--card-background);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
-.individual-section, .edit-section {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    width: 100%;
+.individual-section {
+    margin-bottom: 30px;
 }
 
 h2 {
-    color: #1e90ff;
+    color: var(--secondary-color);
     margin-bottom: 20px;
-    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border-color);
 }
 
-.individual-rank {
+.ranking-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px;
-    margin: 10px 0;
-    background: #f8f9fa;
+    margin-bottom: 10px;
+    background-color: var(--input-background);
     border-radius: 5px;
-    transition: transform 0.2s;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
 }
 
-.individual-rank:hover {
+.ranking-item:hover {
     transform: translateX(5px);
-    background: #e9ecef;
+    background-color: var(--hover-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.rank {
+.ranking-item .rank {
     font-weight: bold;
-    color: #1e90ff;
+    color: var(--primary-color);
+    min-width: 30px;
 }
 
-.points {
+.ranking-item .name {
+    flex-grow: 1;
+    margin: 0 15px;
+}
+
+.ranking-item .points {
     font-weight: bold;
-    color: #28a745;
+    min-width: 80px;
+    text-align: right;
+    color: var(--primary-color);
 }
 
-/* Form Styles */
+.ranking-item .points.negative {
+    color: var(--error-color);
+}
+
+.ranking-item .points.positive {
+    color: var(--success-color);
+}
+
+.edit-section {
+    background-color: var(--card-background);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
 .edit-form {
-    max-width: 500px;
-    margin: 0 auto;
+    display: grid;
+    gap: 15px;
 }
 
 .form-group {
-    margin-bottom: 15px;
+    position: relative;
+    margin-bottom: 20px;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
-    color: #333;
+    margin-bottom: 8px;
+    color: var(--secondary-color);
+    font-weight: 600;
 }
 
-.form-group input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
+input {
+    padding: 10px;
+    border: 2px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1em;
+    background-color: var(--input-background);
+    color: var(--text-color);
 }
 
-.submit-btn {
-    background-color: #1e90ff;
-    color: white;
+input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(255, 77, 77, 0.2);
+}
+
+button {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    width: 100%;
-    font-size: 16px;
-    transition: background-color 0.2s;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+}
+
+.submit-btn {
+    background-color: var(--primary-color);
+    color: var(--text-color);
 }
 
 .submit-btn:hover {
-    background-color: #187bcd;
+    background-color: #ff3333;
 }
 
-.activity {
+.admin-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+}
+
+.admin-btn:hover {
+    background-color: #3d8fff;
+}
+
+.danger-btn {
+    background-color: var(--error-color);
+    color: var(--text-color);
+}
+
+.danger-btn:hover {
+    background-color: #c82333;
+}
+
+.cancel-btn {
+    background-color: var(--hover-color);
+    color: var(--text-color);
+}
+
+.cancel-btn:hover {
+    background-color: #555555;
+}
+
+.admin-section {
+    background-color: var(--card-background);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 30px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.admin-controls {
+    display: grid;
+    gap: 20px;
+}
+
+.admin-form {
+    background-color: var(--background-color);
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.admin-form h3 {
+    margin-bottom: 15px;
+    color: var(--secondary-color);
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--input-background);
+    font-size: 16px;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+select:hover {
+    border-color: var(--accent-color);
+}
+
+select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.1);
+}
+
+select option {
+    padding: 10px;
+    font-size: 16px;
+}
+
+/* Style for positive and negative points in dropdown */
+select option[data-points^="-"] {
+    color: #ff4444;
+}
+
+select option[data-points^="+"] {
+    color: #44aa44;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--card-background);
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    margin: 50px auto;
+    position: relative;
+    animation: modalSlideIn 0.3s ease-out;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.member-details-section {
+    background-color: var(--card-background);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.member-selector {
+    margin-bottom: 20px;
+}
+
+.member-selector select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1.1em;
+    background-color: var(--input-background);
+    cursor: pointer;
+    transition: border-color 0.2s;
+    color: var(--text-color);
+}
+
+.member-selector select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.member-details {
+    background-color: var(--background-color);
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.member-info {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.member-info h3 {
+    color: var(--primary-color);
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.member-info .total-points {
+    font-size: 1.2em;
+    color: var(--secondary-color);
+    font-weight: bold;
+}
+
+.activity-log {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+    border-radius: 5px;
+    margin: 5px 0;
+}
+
+.activity-item .description {
+    flex: 1;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.activity-item .points {
+    font-weight: bold;
+    min-width: 80px;
+    text-align: right;
+}
+
+.activity-item .count {
+    color: var(--secondary-color);
     font-size: 0.9em;
-    color: #666;
-    margin-top: 5px;
+    font-weight: bold;
+}
+
+.activity-item .date-icon {
+    cursor: help;
+    opacity: 0.7;
+}
+
+.activity-item:hover {
+    background-color: var(--hover-color);
+    transform: translateX(5px);
+}
+
+.no-activities {
+    text-align: center;
+    color: var(--text-color);
+    font-style: italic;
+    padding: 20px;
 }
 
 @media (max-width: 768px) {
     .container {
         padding: 10px;
     }
-    
-    .individual-rank {
-        flex-wrap: wrap;
-        gap: 10px;
+
+    header {
+        padding: 15px;
+        margin-bottom: 20px;
     }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .team-logo {
+        font-size: 2.5em;
+        margin: 10px 0;
+    }
+
+    .admin-btn {
+        position: static;
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    .ranking-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 5px;
+        padding: 10px;
+    }
+
+    .ranking-item .name {
+        margin: 5px 0;
+        font-size: 1.1em;
+    }
+
+    .edit-section, .member-details-section, .admin-section {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    input, select {
+        padding: 8px;
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+
+    button {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .activity-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 5px;
+    }
+
+    .activity-item .points {
+        text-align: center;
+        margin-top: 5px;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 20px auto;
+        padding: 20px;
+    }
+
+    .notification {
+        width: 90%;
+        right: 5%;
+        text-align: center;
+    }
+}
+
+.autocomplete-container {
+    position: relative;
+    width: 100%;
+}
+
+.suggestions {
+    position: absolute;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1000;
+    display: none;
+}
+
+.suggestion-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.suggestion-item:hover,
+.suggestion-item.selected {
+    background-color: var(--hover-color);
+}
+
+/* Activity suggestions specific styles */
+#activitySuggestions .suggestion-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#activitySuggestions .suggestion-item[data-points^="-"] {
+    color: #ff6b6b;
+}
+
+#activitySuggestions .suggestion-item[data-points^="+"] {
+    color: #6bff6b;
+}
+
+/* Loading Indicator */
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(26, 26, 26, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    display: none;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid var(--border-color);
+    border-top: 5px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Notifications */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    z-index: 1500;
+    animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s;
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+.notification.success {
+    background-color: var(--success-color);
+}
+
+.notification.error {
+    background-color: var(--error-color);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* Loading animation for points update */
+@keyframes pointsUpdate {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.points-updated {
+    animation: pointsUpdate 0.5s ease-out;
+}
+
+/* Improved form styling */
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(255, 77, 77, 0.2);
+}
+
+/* Improved button styling */
+button {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+}
+
+button:focus:not(:active)::after {
+    animation: ripple 1s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(20, 20);
+        opacity: 0;
+    }
+}
+
+/* Improved scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--background-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--hover-color);
+}
+
+/* Placeholder text color */
+::placeholder {
+    color: #888888;
+}
+
+/* Selection color */
+::selection {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+}
+
+/* Improved date icon */
+.date-icon {
+    cursor: pointer;
+    margin-left: 8px;
+    font-size: 1.1em;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.date-icon:hover {
+    opacity: 1;
+}
+
+/* Add a custom tooltip style */
+.date-icon[title] {
+    position: relative;
+}
+
+.date-icon[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 8px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 4px;
+    font-size: 0.9em;
+    white-space: nowrap;
+    z-index: 1000;
+    margin-bottom: 5px;
+}
+
+/* Add a small arrow to the tooltip */
+.date-icon[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% - 5px);
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+    z-index: 1000;
+}
+
+.backup-section {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: var(--input-background);
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+}
+
+.backup-btn, .restore-btn {
+    margin: 5px;
+    padding: 8px 15px;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.backup-btn:hover, .restore-btn:hover {
+    background-color: #3d8fff;
+}
+
+.total-points {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--secondary-color);
+}
+
+.total-points.negative {
+    color: var(--error-color);
+}
+
+.quick-add-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: var(--background-color);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.quick-add-section h3 {
+    margin: 0 0 10px 0;
+    color: var(--text-color);
+    font-size: 1.1em;
+}
+
+.quick-add-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.quick-add-btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    background: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.2s ease;
+    flex: 1;
+    min-width: 150px;
+}
+
+.quick-add-btn:hover {
+    background: var(--primary-color-dark);
+    transform: translateY(-1px);
+}
+
+.quick-add-btn:active {
+    transform: translateY(0);
+}
+
+.quick-add-btn[data-points="-3"] {
+    background: var(--error-color);
+}
+
+.quick-add-btn[data-points="-3"]:hover {
+    background: var(--error-color-dark);
+}
+
+/* Add a subtle gradient effect to names */
+.ranking-item .name::after {
+    /* Remove all the added properties */
+}
+
+/* Style for the name input field */
+#name {
+    /* Remove all the added properties */
+}
+
+/* Style for name suggestions */
+.suggestion-item {
+    /* Remove all the added properties */
+}
+
+/* Special styling for top 3 positions */
+.ranking-item:nth-child(1) {
+    background: linear-gradient(45deg, #ffd700, #ffec80);
+    border: 2px solid #ffd700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+.ranking-item:nth-child(1) .rank {
+    color: #b8860b;
+    font-size: 1.2em;
+}
+
+.ranking-item:nth-child(1) .rank::before {
+    content: '🥇';
+    margin-right: 5px;
+}
+
+.ranking-item:nth-child(2) {
+    background: linear-gradient(45deg, #c0c0c0, #e8e8e8);
+    border: 2px solid #c0c0c0;
+    box-shadow: 0 0 15px rgba(192, 192, 192, 0.3);
+}
+
+.ranking-item:nth-child(2) .rank {
+    color: #808080;
+    font-size: 1.1em;
+}
+
+.ranking-item:nth-child(2) .rank::before {
+    content: '🥈';
+    margin-right: 5px;
+}
+
+.ranking-item:nth-child(3) {
+    background: linear-gradient(45deg, #cd7f32, #e6b17a);
+    border: 2px solid #cd7f32;
+    box-shadow: 0 0 15px rgba(205, 127, 50, 0.3);
+}
+
+.ranking-item:nth-child(3) .rank {
+    color: #8b4513;
+    font-size: 1.1em;
+}
+
+.ranking-item:nth-child(3) .rank::before {
+    content: '🥉';
+    margin-right: 5px;
+}
+
+/* Adjust text colors for better contrast on medal backgrounds */
+.ranking-item:nth-child(1) .name,
+.ranking-item:nth-child(1) .points {
+    color: #000000;
+}
+
+.ranking-item:nth-child(2) .name,
+.ranking-item:nth-child(2) .points {
+    color: #000000;
+}
+
+.ranking-item:nth-child(3) .name,
+.ranking-item:nth-child(3) .points {
+    color: #000000;
+}
+
+/* Add shine animation for top 3 */
+@keyframes shine {
+    0% {
+        background-position: -100% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.ranking-item:nth-child(1),
+.ranking-item:nth-child(2),
+.ranking-item:nth-child(3) {
+    position: relative;
+    overflow: hidden;
+}
+
+.ranking-item:nth-child(1)::after,
+.ranking-item:nth-child(2)::after,
+.ranking-item:nth-child(3)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    background-size: 200% 100%;
+    animation: shine 3s infinite linear;
+    pointer-events: none;
 } 
