@@ -12,7 +12,7 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
 }
@@ -28,16 +28,16 @@ header {
 }
 
 .leaderboard {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
+    display: flex;
+    justify-content: center;
 }
 
-.team-section, .individual-section {
+.individual-section {
     background: white;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 100%;
 }
 
 h2 {
@@ -46,7 +46,7 @@ h2 {
     text-align: center;
 }
 
-.team-rank, .individual-rank {
+.individual-rank {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -57,7 +57,7 @@ h2 {
     transition: transform 0.2s;
 }
 
-.team-rank:hover, .individual-rank:hover {
+.individual-rank:hover {
     transform: translateX(5px);
     background: #e9ecef;
 }
@@ -73,7 +73,12 @@ h2 {
 }
 
 @media (max-width: 768px) {
-    .leaderboard {
-        grid-template-columns: 1fr;
+    .container {
+        padding: 10px;
+    }
+    
+    .individual-rank {
+        flex-wrap: wrap;
+        gap: 10px;
     }
 } 
