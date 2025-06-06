@@ -1,33 +1,33 @@
 # Lifeguard Team Leaderboard
 
-A web application to track and display points and achievements for the lifeguard team.
+An interactive web-based leaderboard for tracking lifeguard team and individual points.
 
 ## Features
 
-- Team member leaderboard
-- Points tracking
-- Achievement history
-- Mobile-friendly design
+- Team rankings display
+- Individual rankings display
+- Responsive design for all devices
+- Real-time updates (coming soon)
+- Point tracking system
 
-## Setup
+## How to Use
 
-1. Clone the repository
-2. Install dependencies: `npm install`
-3. Start the development server: `npm start`
+1. Open `index.html` in your web browser
+2. View team and individual rankings
+3. Points are automatically sorted from highest to lowest
 
 ## Development
 
-This project is built with:
-- React.js
-- Tailwind CSS
-- GitHub Pages for hosting
+This is a static website that can be easily modified by editing:
+- `index.html` - Main structure
+- `styles.css` - Visual styling
+- `script.js` - Functionality and data
+
+## Deployment
+
+This project is deployed using GitHub Pages. To view the live site, visit:
+[Your GitHub Pages URL will appear here after deployment]
 
 ## Contributing
 
-1. Create a new branch for your feature
-2. Make your changes
-3. Submit a pull request
-
-## License
-
-MIT License 
+Feel free to submit issues and enhancement requests! 

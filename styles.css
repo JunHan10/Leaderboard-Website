@@ -1,0 +1,79 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f0f8ff;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 20px;
+    background-color: #1e90ff;
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.leaderboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.team-section, .individual-section {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+h2 {
+    color: #1e90ff;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.team-rank, .individual-rank {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin: 10px 0;
+    background: #f8f9fa;
+    border-radius: 5px;
+    transition: transform 0.2s;
+}
+
+.team-rank:hover, .individual-rank:hover {
+    transform: translateX(5px);
+    background: #e9ecef;
+}
+
+.rank {
+    font-weight: bold;
+    color: #1e90ff;
+}
+
+.points {
+    font-weight: bold;
+    color: #28a745;
+}
+
+@media (max-width: 768px) {
+    .leaderboard {
+        grid-template-columns: 1fr;
+    }
+} 
