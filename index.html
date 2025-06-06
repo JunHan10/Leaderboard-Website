@@ -24,6 +24,11 @@
         <header>
             <h1>Red Team Leaderboard</h1>
             <div class="team-logo">🦞</div>
+            <div class="team-total">
+                <span>Grand Total: </span>
+                <span id="teamTotalPoints">0</span>
+                <span> points</span>
+            </div>
             <button id="adminLoginBtn" class="admin-btn">Admin Login</button>
         </header>
         
@@ -54,9 +59,9 @@
                 <div class="quick-add-section">
                     <h3>Quick Add</h3>
                     <div class="quick-add-buttons">
-                        <button class="quick-add-btn" data-activity="Pick up a shift" data-points="3">Pick up a shift (+3)</button>
-                        <button class="quick-add-btn" data-activity="Take initiative noticed by HG" data-points="2">Take initiative (+2)</button>
-                        <button class="quick-add-btn" data-activity="Clock in late or early" data-points="-3">Clock in late/early (-3)</button>
+                        <button class="quick-add-btn" data-activity="Picked up a shift" data-points="3">Picked up a shift (+3)</button>
+                        <button class="quick-add-btn" data-activity="Took initiative noticed by HG" data-points="2">Took initiative (+2)</button>
+                        <button class="quick-add-btn" data-activity="Clocked in late or early" data-points="-3">Clocked in late/early (-3)</button>
                     </div>
                 </div>
                 <form id="editForm" class="edit-form">

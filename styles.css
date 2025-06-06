@@ -955,4 +955,23 @@ button:focus:not(:active)::after {
     background-size: 200% 100%;
     animation: shine 3s infinite linear;
     pointer-events: none;
+}
+
+.team-total {
+    background-color: var(--primary-color);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: white;
+    margin: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.team-total #teamTotalPoints {
+    color: var(--success-color);
+    font-size: 1.3em;
 } 

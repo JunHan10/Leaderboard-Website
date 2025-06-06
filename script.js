@@ -253,6 +253,7 @@ function loadLeaderboardData() {
             renderLeaderboard();
             updateRemoveMemberSelect();
             updateMemberSelect();
+            updateTeamTotal();
             
             // If a member is currently selected, update their details
             const currentMember = memberSelect.value;
@@ -358,6 +359,22 @@ function calculateTotalPoints(activities) {
         }
     });
     return total;
+}
+
+// Calculate and update team total points
+function updateTeamTotal() {
+    const teamTotal = leaderboardData.reduce((total, member) => {
+        return total + calculateTotalPoints(member.activities || []);
+    }, 0);
+    
+    const teamTotalElement = document.getElementById('teamTotalPoints');
+    teamTotalElement.textContent = teamTotal;
+    
+    // Add animation class
+    teamTotalElement.classList.add('points-updated');
+    setTimeout(() => {
+        teamTotalElement.classList.remove('points-updated');
+    }, 500);
 }
 
 // Render the leaderboard
