@@ -237,11 +237,13 @@ function startSessionCheck() {
 // Load data from Firebase with real-time updates
 function loadLeaderboardData() {
     const startTime = performance.now();
+    console.log('Loading data from Firebase...');
     return new Promise((resolve) => {
         // Set up real-time listener
         database.ref('leaderboard').on('value', (snapshot) => {
             const data = snapshot.val() || [];
             const endTime = performance.now();
+            console.log('Data received from Firebase:', data);
             console.log(`Data updated in ${(endTime - startTime).toFixed(2)}ms`);
             
             // Update the leaderboard data
@@ -259,6 +261,8 @@ function loadLeaderboardData() {
             }
             
             resolve(data);
+        }, (error) => {
+            console.error('Error loading data:', error);
         });
     });
 }
@@ -266,6 +270,7 @@ function loadLeaderboardData() {
 // Save data to Firebase
 function saveLeaderboardData() {
     const startTime = performance.now();
+    console.log('Saving data to Firebase:', leaderboardData);
     return new Promise((resolve, reject) => {
         try {
             // Validate data before saving
@@ -297,17 +302,22 @@ function saveLeaderboardData() {
                 };
             }).filter(entry => entry !== null);
             
+            console.log('Validated data to save:', validData);
+            
             // Save to Firebase
             database.ref('leaderboard').set(validData, (error) => {
                 if (error) {
+                    console.error('Error saving to Firebase:', error);
                     reject(error);
                 } else {
                     const endTime = performance.now();
+                    console.log('Data successfully saved to Firebase');
                     console.log(`Data saved in ${(endTime - startTime).toFixed(2)}ms`);
                     resolve();
                 }
             });
         } catch (error) {
+            console.error('Error in saveLeaderboardData:', error);
             reject(error);
         }
     });
@@ -1180,6 +1190,11 @@ function testFirebaseConnection() {
         if (snap.val() === true) {
             console.log('Connected to Firebase!');
             showNotification('Connected to database successfully!', 'success');
+            
+            // Test database access
+            database.ref('leaderboard').once('value', (snapshot) => {
+                console.log('Current database state:', snapshot.val());
+            });
         } else {
             console.log('Not connected to Firebase');
             showNotification('Database connection failed', 'error');
