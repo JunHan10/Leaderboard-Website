@@ -186,16 +186,24 @@ button {
     background-color: #ff3333;
 }
 
+.admin-login-container {
+    text-align: center;
+    margin-top: 30px;
+    padding: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
 .admin-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
     background-color: var(--secondary-color);
     color: var(--text-color);
+    padding: 12px 24px;
+    font-size: 1.1em;
 }
 
 .admin-btn:hover {
     background-color: #3d8fff;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .danger-btn {
