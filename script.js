@@ -304,17 +304,41 @@ function saveLeaderboardData() {
             
             console.log('Validated data to save:', validData);
             
-            // Save to Firebase
-            database.ref('leaderboard').set(validData, (error) => {
-                if (error) {
-                    console.error('Error saving to Firebase:', error);
-                    reject(error);
-                } else {
-                    const endTime = performance.now();
-                    console.log('Data successfully saved to Firebase');
-                    console.log(`Data saved in ${(endTime - startTime).toFixed(2)}ms`);
-                    resolve();
-                }
+            // First, get existing data
+            database.ref('leaderboard').once('value', (snapshot) => {
+                const existingData = snapshot.val() || [];
+                console.log('Existing data:', existingData);
+                
+                // Merge new data with existing data
+                const mergedData = Array.isArray(existingData) ? existingData : [];
+                validData.forEach(newEntry => {
+                    const existingIndex = mergedData.findIndex(entry => 
+                        entry.name.toLowerCase() === newEntry.name.toLowerCase()
+                    );
+                    
+                    if (existingIndex !== -1) {
+                        // Update existing entry
+                        mergedData[existingIndex] = newEntry;
+                    } else {
+                        // Add new entry
+                        mergedData.push(newEntry);
+                    }
+                });
+                
+                console.log('Merged data to save:', mergedData);
+                
+                // Save merged data to Firebase
+                database.ref('leaderboard').set(mergedData, (error) => {
+                    if (error) {
+                        console.error('Error saving to Firebase:', error);
+                        reject(error);
+                    } else {
+                        const endTime = performance.now();
+                        console.log('Data successfully saved to Firebase');
+                        console.log(`Data saved in ${(endTime - startTime).toFixed(2)}ms`);
+                        resolve();
+                    }
+                });
             });
         } catch (error) {
             console.error('Error in saveLeaderboardData:', error);
