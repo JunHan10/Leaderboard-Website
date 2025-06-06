@@ -183,8 +183,11 @@ let selectedActivitySuggestionIndex = -1;
 let sessionCheckInterval;
 
 // Initialize
-function init() {
+async function init() {
     const startTime = performance.now();
+    
+    // Test Firebase connection
+    testFirebaseConnection();
     
     // Set CSRF token
     document.getElementById('csrfToken').value = CSRF_TOKEN;
@@ -205,11 +208,15 @@ function init() {
         startSessionCheck();
     }
     
-    renderLeaderboard();
-    setupEventListeners();
-    updateRemoveMemberSelect();
-    updateMemberSelect();
-    addBackupControls();
+    // Load data from Firebase with real-time updates
+    try {
+        await loadLeaderboardData();
+        setupEventListeners();
+        addBackupControls();
+    } catch (error) {
+        console.error('Error loading data:', error);
+        showNotification('Error loading data. Please refresh the page.', 'error');
+    }
 
     const endTime = performance.now();
     const loadTime = endTime - startTime;
@@ -227,92 +234,83 @@ function startSessionCheck() {
     }, 60000); // Check every minute
 }
 
-// Load data from localStorage
+// Load data from Firebase with real-time updates
 function loadLeaderboardData() {
     const startTime = performance.now();
-    try {
-        const savedData = localStorage.getItem(STORAGE_KEY);
-        if (!savedData) return [];
-        
-        const data = JSON.parse(savedData);
-        
-        // Validate data structure
-        if (!Array.isArray(data)) return [];
-        
-        // Validate each entry and ensure points are numbers
-        const result = data.map(entry => {
-            if (!entry || typeof entry !== 'object') return null;
-            if (!entry.name || !validateName(entry.name)) return null;
-            if (!Array.isArray(entry.activities)) return null;
+    return new Promise((resolve) => {
+        // Set up real-time listener
+        database.ref('leaderboard').on('value', (snapshot) => {
+            const data = snapshot.val() || [];
+            const endTime = performance.now();
+            console.log(`Data updated in ${(endTime - startTime).toFixed(2)}ms`);
             
-            // Validate activities and ensure points are numbers
-            const validActivities = entry.activities.map(activity => {
-                if (!activity || typeof activity !== 'object') return null;
-                const points = Number(activity.points);
-                if (isNaN(points)) return null;
-                return {
-                    points: points,
-                    description: activity.description,
-                    timestamp: activity.timestamp
-                };
-            }).filter(activity => activity !== null);
+            // Update the leaderboard data
+            leaderboardData = data;
             
-            return {
-                name: entry.name,
-                activities: validActivities
-            };
-        }).filter(entry => entry !== null);
-
-        const endTime = performance.now();
-        console.log(`Data loaded in ${(endTime - startTime).toFixed(2)}ms`);
-        return result;
-    } catch (error) {
-        console.error('Error loading data:', error);
-        return [];
-    }
+            // Update the UI
+            renderLeaderboard();
+            updateRemoveMemberSelect();
+            updateMemberSelect();
+            
+            // If a member is currently selected, update their details
+            const currentMember = memberSelect.value;
+            if (currentMember) {
+                displayMemberDetails(currentMember);
+            }
+            
+            resolve(data);
+        });
+    });
 }
 
-// Save data to localStorage
+// Save data to Firebase
 function saveLeaderboardData() {
     const startTime = performance.now();
-    try {
-        // Validate data before saving
-        if (!Array.isArray(leaderboardData)) {
-            throw new Error('Invalid data structure');
-        }
-        
-        // Validate each entry and ensure points are numbers
-        const validData = leaderboardData.map(entry => {
-            if (!entry || typeof entry !== 'object') return null;
-            if (!entry.name || !validateName(entry.name)) return null;
-            if (!Array.isArray(entry.activities)) return null;
+    return new Promise((resolve, reject) => {
+        try {
+            // Validate data before saving
+            if (!Array.isArray(leaderboardData)) {
+                throw new Error('Invalid data structure');
+            }
             
-            // Validate activities and ensure points are numbers
-            const validActivities = entry.activities.map(activity => {
-                if (!activity || typeof activity !== 'object') return null;
-                const points = Number(activity.points);
-                if (isNaN(points)) return null;
+            // Validate each entry and ensure points are numbers
+            const validData = leaderboardData.map(entry => {
+                if (!entry || typeof entry !== 'object') return null;
+                if (!entry.name || !validateName(entry.name)) return null;
+                if (!Array.isArray(entry.activities)) return null;
+                
+                // Validate activities and ensure points are numbers
+                const validActivities = entry.activities.map(activity => {
+                    if (!activity || typeof activity !== 'object') return null;
+                    const points = Number(activity.points);
+                    if (isNaN(points)) return null;
+                    return {
+                        points: points,
+                        description: activity.description,
+                        timestamp: activity.timestamp
+                    };
+                }).filter(activity => activity !== null);
+                
                 return {
-                    points: points,
-                    description: activity.description,
-                    timestamp: activity.timestamp
+                    name: entry.name,
+                    activities: validActivities
                 };
-            }).filter(activity => activity !== null);
+            }).filter(entry => entry !== null);
             
-            return {
-                name: entry.name,
-                activities: validActivities
-            };
-        }).filter(entry => entry !== null);
-        
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(validData));
-        
-        const endTime = performance.now();
-        console.log(`Data saved in ${(endTime - startTime).toFixed(2)}ms`);
-    } catch (error) {
-        console.error('Error saving data:', error);
-        showNotification('Error saving data. Please try again.', 'error');
-    }
+            // Save to Firebase
+            database.ref('leaderboard').set(validData, (error) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    const endTime = performance.now();
+                    console.log(`Data saved in ${(endTime - startTime).toFixed(2)}ms`);
+                    resolve();
+                }
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
 }
 
 // Calculate total points for a member
@@ -802,7 +800,7 @@ function setupEventListeners() {
                     leaderboardData[existingIndex].activities.push(newActivity);
                     
                     // Force a save and update
-                    saveLeaderboardData();
+                    await saveLeaderboardData();
                     renderLeaderboard();
                     updateRemoveMemberSelect();
                     updateMemberSelect();
@@ -849,7 +847,7 @@ function setupEventListeners() {
                     leaderboardData.push(newMember);
                     showNotification(`Welcome ${name} to the leaderboard!`, 'success');
                     
-                    saveLeaderboardData();
+                    await saveLeaderboardData();
                     renderLeaderboard();
                     updateRemoveMemberSelect();
                     updateMemberSelect();
@@ -1173,6 +1171,20 @@ function addBackupControls() {
     backupSection.appendChild(restoreInput);
     backupSection.appendChild(restoreBtn);
     adminControls.appendChild(backupSection);
+}
+
+// Test Firebase connection
+function testFirebaseConnection() {
+    console.log('Testing Firebase connection...');
+    database.ref('.info/connected').on('value', (snap) => {
+        if (snap.val() === true) {
+            console.log('Connected to Firebase!');
+            showNotification('Connected to database successfully!', 'success');
+        } else {
+            console.log('Not connected to Firebase');
+            showNotification('Database connection failed', 'error');
+        }
+    });
 }
 
 // Initialize the app
