@@ -30,9 +30,10 @@ header {
 .leaderboard {
     display: flex;
     justify-content: center;
+    margin-bottom: 40px;
 }
 
-.individual-section {
+.individual-section, .edit-section {
     background: white;
     padding: 20px;
     border-radius: 10px;
@@ -70,6 +71,52 @@ h2 {
 .points {
     font-weight: bold;
     color: #28a745;
+}
+
+/* Form Styles */
+.edit-form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.submit-btn {
+    background-color: #1e90ff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    transition: background-color 0.2s;
+}
+
+.submit-btn:hover {
+    background-color: #187bcd;
+}
+
+.activity {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
 }
 
 @media (max-width: 768px) {
