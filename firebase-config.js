@@ -11,10 +11,26 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const database = firebase.database(app);
-const analytics = firebase.analytics(app);
+try {
+    const app = firebase.initializeApp(firebaseConfig);
+    const database = firebase.database(app);
+    
+    // Initialize analytics with error handling
+    let analytics = null;
+    try {
+        analytics = firebase.analytics(app);
+    } catch (error) {
+        console.warn('Analytics initialization failed:', error);
+        // Continue without analytics
+    }
 
-// Export for use in other files
-window.database = database;
-window.analytics = analytics; 
+    // Export for use in other files
+    window.database = database;
+    window.analytics = analytics;
+} catch (error) {
+    console.error('Firebase initialization failed:', error);
+    // Show error to user
+    if (typeof showNotification === 'function') {
+        showNotification('Failed to initialize database. Please refresh the page.', 'error');
+    }
+} 
