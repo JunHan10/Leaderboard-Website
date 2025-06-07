@@ -11,8 +11,10 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
+const app = firebase.initializeApp(firebaseConfig);
+const database = firebase.database(app);
+const analytics = firebase.analytics(app);
 
-// Enable Firebase Analytics
-firebase.analytics(); 
+// Export for use in other files
+window.database = database;
+window.analytics = analytics; 

@@ -184,43 +184,40 @@ let sessionCheckInterval;
 
 // Initialize
 async function init() {
-    const startTime = performance.now();
-    
-    // Test Firebase connection
-    testFirebaseConnection();
-    
-    // Set CSRF token
-    document.getElementById('csrfToken').value = CSRF_TOKEN;
-    
-    // Initialize point system
-    initializePointSystem();
-    
-    // Ensure admin section is hidden on page load
-    adminSection.style.display = 'none';
-    adminLoginBtn.style.display = 'block';
-    
-    // Check if admin was previously logged in
-    const adminLoggedIn = localStorage.getItem('adminLoggedIn');
-    if (adminLoggedIn && !checkSessionTimeout()) {
-        isAdminLoggedIn = true;
-        adminSection.style.display = 'block';
-        adminLoginBtn.style.display = 'none';
-        startSessionCheck();
-    }
-    
-    // Load data from Firebase with real-time updates
     try {
+        const startTime = performance.now();
+        
+        // Test Firebase connection
+        await testFirebaseConnection();
+        
+        // Set CSRF token
+        document.getElementById('csrfToken').value = CSRF_TOKEN;
+        
+        // Initialize point system
+        initializePointSystem();
+        
+        // Ensure admin section is hidden on page load
+        adminSection.style.display = 'none';
+        adminLoginBtn.style.display = 'block';
+        
+        // Load initial data
         await loadLeaderboardData();
+        
+        // Set up event listeners
         setupEventListeners();
+        
+        // Start session check
+        startSessionCheck();
+        
+        // Add backup controls
         addBackupControls();
+        
+        const endTime = performance.now();
+        console.log(`Initialization completed in ${(endTime - startTime).toFixed(2)}ms`);
     } catch (error) {
-        console.error('Error loading data:', error);
-        showNotification('Error loading data. Please refresh the page.', 'error');
+        console.error('Error during initialization:', error);
+        showNotification('Error initializing application: ' + error.message, 'error');
     }
-
-    const endTime = performance.now();
-    const loadTime = endTime - startTime;
-    console.log(`Application loaded in ${loadTime.toFixed(2)}ms`);
 }
 
 function startSessionCheck() {
@@ -1227,18 +1224,39 @@ function addBackupControls() {
 // Test Firebase connection
 function testFirebaseConnection() {
     console.log('Testing Firebase connection...');
-    database.ref('.info/connected').on('value', (snap) => {
-        if (snap.val() === true) {
-            console.log('Connected to Firebase!');
-            showNotification('Connected to database successfully!', 'success');
-            
-            // Test database access
-            database.ref('leaderboard').once('value', (snapshot) => {
-                console.log('Current database state:', snapshot.val());
+    return new Promise((resolve, reject) => {
+        try {
+            // Test database connection
+            database.ref('.info/connected').on('value', (snap) => {
+                if (snap.val() === true) {
+                    console.log('Connected to Firebase!');
+                    showNotification('Connected to database successfully!', 'success');
+                    
+                    // Test database access
+                    database.ref('leaderboard').once('value')
+                        .then((snapshot) => {
+                            console.log('Current database state:', snapshot.val());
+                            resolve(true);
+                        })
+                        .catch((error) => {
+                            console.error('Error accessing database:', error);
+                            showNotification('Database access failed: ' + error.message, 'error');
+                            reject(error);
+                        });
+                } else {
+                    console.log('Not connected to Firebase');
+                    showNotification('Database connection failed', 'error');
+                    reject(new Error('Not connected to Firebase'));
+                }
+            }, (error) => {
+                console.error('Firebase connection error:', error);
+                showNotification('Database connection error: ' + error.message, 'error');
+                reject(error);
             });
-        } else {
-            console.log('Not connected to Firebase');
-            showNotification('Database connection failed', 'error');
+        } catch (error) {
+            console.error('Error in testFirebaseConnection:', error);
+            showNotification('Error testing database connection: ' + error.message, 'error');
+            reject(error);
         }
     });
 }
