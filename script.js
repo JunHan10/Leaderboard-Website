@@ -187,8 +187,27 @@ async function init() {
     try {
         const startTime = performance.now();
         
-        // Test Firebase connection
-        await testFirebaseConnection();
+        // Wait for Firebase to be ready
+        let retryCount = 0;
+        const maxRetries = 3;
+        
+        while (retryCount < maxRetries) {
+            try {
+                // Test Firebase connection
+                await testFirebaseConnection();
+                break; // If successful, break the loop
+            } catch (error) {
+                retryCount++;
+                console.log(`Connection attempt ${retryCount} failed:`, error);
+                
+                if (retryCount === maxRetries) {
+                    throw new Error('Failed to connect to Firebase after multiple attempts');
+                }
+                
+                // Wait before retrying
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            }
+        }
         
         // Set CSRF token
         document.getElementById('csrfToken').value = CSRF_TOKEN;
@@ -217,6 +236,20 @@ async function init() {
     } catch (error) {
         console.error('Error during initialization:', error);
         showNotification('Error initializing application: ' + error.message, 'error');
+        
+        // Show a more user-friendly error message
+        const errorMessage = document.createElement('div');
+        errorMessage.className = 'error-message';
+        errorMessage.innerHTML = `
+            <h2>Connection Error</h2>
+            <p>Unable to connect to the database. Please try the following:</p>
+            <ul>
+                <li>Check your internet connection</li>
+                <li>Refresh the page</li>
+                <li>If the problem persists, contact support</li>
+            </ul>
+        `;
+        document.querySelector('.container').prepend(errorMessage);
     }
 }
 
@@ -1226,16 +1259,28 @@ function testFirebaseConnection() {
     console.log('Testing Firebase connection...');
     return new Promise((resolve, reject) => {
         try {
+            // First check if Firebase is initialized
+            if (!window.database) {
+                throw new Error('Firebase database not initialized');
+            }
+
+            // Set a timeout for the connection test
+            const timeout = setTimeout(() => {
+                reject(new Error('Firebase connection timeout'));
+            }, 10000); // 10 second timeout
+
             // Test database connection
-            database.ref('.info/connected').on('value', (snap) => {
+            const connectedRef = database.ref('.info/connected');
+            connectedRef.on('value', (snap) => {
                 if (snap.val() === true) {
                     console.log('Connected to Firebase!');
-                    showNotification('Connected to database successfully!', 'success');
+                    clearTimeout(timeout);
                     
                     // Test database access
                     database.ref('leaderboard').once('value')
                         .then((snapshot) => {
                             console.log('Current database state:', snapshot.val());
+                            showNotification('Connected to database successfully!', 'success');
                             resolve(true);
                         })
                         .catch((error) => {
@@ -1250,6 +1295,7 @@ function testFirebaseConnection() {
                 }
             }, (error) => {
                 console.error('Firebase connection error:', error);
+                clearTimeout(timeout);
                 showNotification('Database connection error: ' + error.message, 'error');
                 reject(error);
             });
